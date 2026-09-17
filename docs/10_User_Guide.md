@@ -1,0 +1,3 @@
+# User Guide
+
+Start at the landing page and enter the console. Super Admin can inspect users, roles, permissions, alerts, and audit logs. Administrator accounts may receive a development MFA prompt. Employees can use dashboard/profile resources but receive `403` for administrative endpoints. Use Security Monitoring to run a synthetic event, then Alerts to resolve the alert and Audit Logs to review the complete chain.

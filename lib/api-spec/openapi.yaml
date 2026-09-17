@@ -3,20 +3,27 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Smart IAM Security Platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: auth
+  - name: dashboard
+  - name: users
+  - name: roles
+  - name: permissions
+  - name: security
+  - name: audit
+  - name: profile
+  - name: sessions
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +31,776 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /auth/session:
+    get:
+      operationId: getAuthSession
+      tags: [auth]
+      summary: Get the current authenticated session
+      responses:
+        "200":
+          description: Session state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSession"
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Authenticate with username or email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Authenticated or MFA required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResult"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: Registered user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid registration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/verify-mfa:
+    post:
+      operationId: verifyMfa
+      tags: [auth]
+      summary: Verify a one-time MFA code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MfaInput"
+      responses:
+        "200":
+          description: Authenticated session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSession"
+        "401":
+          description: Invalid or expired code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: End the current session
+      responses:
+        "204":
+          description: Logged out
+  /dashboard/stats:
+    get:
+      operationId: getDashboardStats
+      tags: [dashboard]
+      summary: Get system overview metrics
+      responses:
+        "200":
+          description: Dashboard metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+  /dashboard/charts:
+    get:
+      operationId: getDashboardCharts
+      tags: [dashboard]
+      summary: Get chart-ready security aggregates
+      responses:
+        "200":
+          description: Chart data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardCharts"
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      summary: List users
+      parameters:
+        - $ref: "#/components/parameters/Search"
+        - $ref: "#/components/parameters/Status"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedUsers"
+    post:
+      operationId: createUser
+      tags: [users]
+      summary: Create a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /users/{id}:
+    get:
+      operationId: getUser
+      tags: [users]
+      summary: Get a user
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateUser
+      tags: [users]
+      summary: Update a user
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    delete:
+      operationId: deleteUser
+      tags: [users]
+      summary: Delete a user
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Deleted
+  /roles:
+    get:
+      operationId: listRoles
+      tags: [roles]
+      summary: List roles
+      responses:
+        "200":
+          description: Roles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Role"
+    post:
+      operationId: createRole
+      tags: [roles]
+      summary: Create a role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleInput"
+      responses:
+        "201":
+          description: Created role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Role"
+  /roles/{id}:
+    patch:
+      operationId: updateRole
+      tags: [roles]
+      summary: Update a role
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleUpdate"
+      responses:
+        "200":
+          description: Updated role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Role"
+    delete:
+      operationId: deleteRole
+      tags: [roles]
+      summary: Delete a role
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Deleted
+  /roles/{id}/permissions:
+    put:
+      operationId: assignRolePermissions
+      tags: [roles]
+      summary: Replace a role's permissions
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RolePermissionsInput"
+      responses:
+        "200":
+          description: Updated role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Role"
+  /permissions:
+    get:
+      operationId: listPermissions
+      tags: [permissions]
+      summary: List permissions
+      responses:
+        "200":
+          description: Permissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Permission"
+  /security/events:
+    get:
+      operationId: listSecurityEvents
+      tags: [security]
+      summary: List login risk events
+      parameters:
+        - $ref: "#/components/parameters/Search"
+        - name: riskLevel
+          in: query
+          schema:
+            type: string
+        - name: success
+          in: query
+          schema:
+            type: boolean
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Security events
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedSecurityEvents"
+  /security/alerts:
+    get:
+      operationId: listAlerts
+      tags: [security]
+      summary: List security alerts
+      parameters:
+        - name: severity
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Security alerts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedAlerts"
+  /security/alerts/{id}/resolve:
+    post:
+      operationId: resolveAlert
+      tags: [security]
+      summary: Resolve a security alert
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Resolved alert
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityAlert"
+  /security/simulator:
+    post:
+      operationId: simulateSecurityEvent
+      tags: [security]
+      summary: Generate a safe synthetic security event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SimulatorInput"
+      responses:
+        "201":
+          description: Simulated event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimulationResult"
+  /audit-logs:
+    get:
+      operationId: listAuditLogs
+      tags: [audit]
+      summary: List audit events
+      parameters:
+        - $ref: "#/components/parameters/Search"
+        - name: action
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Audit logs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedAuditLogs"
+  /audit-logs/export:
+    get:
+      operationId: exportAuditLogs
+      tags: [audit]
+      summary: Export audit logs as CSV
+      responses:
+        "200":
+          description: CSV export
+          content:
+            text/csv:
+              schema:
+                type: string
+  /profile:
+    get:
+      operationId: getProfile
+      tags: [profile]
+      summary: Get current user profile
+      responses:
+        "200":
+          description: Profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    patch:
+      operationId: updateProfile
+      tags: [profile]
+      summary: Update current profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileUpdate"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /sessions:
+    get:
+      operationId: listSessions
+      tags: [sessions]
+      summary: List current user's active sessions
+      responses:
+        "200":
+          description: Active sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Session"
+  /sessions/{id}/revoke:
+    post:
+      operationId: revokeSession
+      tags: [sessions]
+      summary: Revoke a session
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Revoked
 components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    Search:
+      name: search
+      in: query
+      schema:
+        type: string
+    Status:
+      name: status
+      in: query
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: pageSize
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
     HealthStatus:
       type: object
       properties:
         status:
           type: string
-      required:
-        - status
-
+      required: [status]
+    Role:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string }
+        permissionIds:
+          type: array
+          items: { type: integer }
+        userCount: { type: integer }
+        createdAt: { type: string, format: date-time }
+      required: [id, name, description, permissionIds, userCount, createdAt]
+    RoleInput:
+      type: object
+      properties:
+        name: { type: string, minLength: 2 }
+        description: { type: string }
+      required: [name, description]
+    RoleUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 2 }
+        description: { type: string }
+    RolePermissionsInput:
+      type: object
+      properties:
+        permissionIds:
+          type: array
+          items: { type: integer }
+      required: [permissionIds]
+    Permission:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string }
+        resource: { type: string }
+        action: { type: string }
+      required: [id, name, description, resource, action]
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        username: { type: string }
+        email: { type: string, format: email }
+        firstName: { type: string }
+        lastName: { type: string }
+        initials: { type: string }
+        isActive: { type: boolean }
+        isLocked: { type: boolean }
+        mfaEnabled: { type: boolean }
+        roles:
+          type: array
+          items: { $ref: "#/components/schemas/RoleSummary" }
+        lastLogin: { type: ["string", "null"], format: date-time }
+        createdAt: { type: string, format: date-time }
+      required: [id, username, email, firstName, lastName, initials, isActive, isLocked, mfaEnabled, roles, lastLogin, createdAt]
+    RoleSummary:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+      required: [id, name]
+    UserInput:
+      type: object
+      properties:
+        username: { type: string, minLength: 3 }
+        email: { type: string, format: email }
+        firstName: { type: string }
+        lastName: { type: string }
+        password: { type: string, minLength: 8 }
+        roleIds:
+          type: array
+          items: { type: integer }
+      required: [username, email, firstName, lastName, password]
+    UserUpdate:
+      type: object
+      properties:
+        firstName: { type: string }
+        lastName: { type: string }
+        isActive: { type: boolean }
+        isLocked: { type: boolean }
+        mfaEnabled: { type: boolean }
+        roleIds:
+          type: array
+          items: { type: integer }
+    ProfileUpdate:
+      type: object
+      properties:
+        firstName: { type: string }
+        lastName: { type: string }
+        email: { type: string, format: email }
+        mfaEnabled: { type: boolean }
+    LoginInput:
+      type: object
+      properties:
+        identifier: { type: string }
+        password: { type: string }
+      required: [identifier, password]
+    RegisterInput:
+      type: object
+      properties:
+        firstName: { type: string }
+        lastName: { type: string }
+        username: { type: string, minLength: 3 }
+        email: { type: string, format: email }
+        password: { type: string, minLength: 8 }
+        confirmPassword: { type: string }
+      required: [firstName, lastName, username, email, password, confirmPassword]
+    MfaInput:
+      type: object
+      properties:
+        challengeId: { type: string }
+        code: { type: string, minLength: 6, maxLength: 6 }
+      required: [challengeId, code]
+    AuthSession:
+      type: object
+      properties:
+        authenticated: { type: boolean }
+        mfaRequired: { type: boolean }
+        challengeId: { type: ["string", "null"] }
+        demoOtp: { type: ["string", "null"] }
+        user:
+          anyOf:
+            - $ref: "#/components/schemas/User"
+            - type: "null"
+      required: [authenticated, mfaRequired, challengeId, demoOtp, user]
+    LoginResult:
+      allOf:
+        - $ref: "#/components/schemas/AuthSession"
+    Session:
+      type: object
+      properties:
+        id: { type: integer }
+        device: { type: string }
+        location: { type: string }
+        ipAddress: { type: string }
+        createdAt: { type: string, format: date-time }
+        lastActiveAt: { type: string, format: date-time }
+        current: { type: boolean }
+      required: [id, device, location, ipAddress, createdAt, lastActiveAt, current]
+    DashboardStats:
+      type: object
+      properties:
+        totalUsers: { type: integer }
+        activeUsers: { type: integer }
+        lockedUsers: { type: integer }
+        totalRoles: { type: integer }
+        loginAttempts: { type: integer }
+        failedLogins: { type: integer }
+        activeSessions: { type: integer }
+        openAlerts: { type: integer }
+        riskScore: { type: integer }
+      required: [totalUsers, activeUsers, lockedUsers, totalRoles, loginAttempts, failedLogins, activeSessions, openAlerts, riskScore]
+    ChartPoint:
+      type: object
+      properties:
+        label: { type: string }
+        value: { type: integer }
+        secondary: { type: ["integer", "null"] }
+      required: [label, value, secondary]
+    DashboardCharts:
+      type: object
+      properties:
+        loginActivity:
+          type: array
+          items: { $ref: "#/components/schemas/ChartPoint" }
+        riskDistribution:
+          type: array
+          items: { $ref: "#/components/schemas/ChartPoint" }
+        alertSeverity:
+          type: array
+          items: { $ref: "#/components/schemas/ChartPoint" }
+      required: [loginActivity, riskDistribution, alertSeverity]
+    SecurityEvent:
+      type: object
+      properties:
+        id: { type: integer }
+        user: { type: string }
+        email: { type: string }
+        ipAddress: { type: string }
+        device: { type: string }
+        success: { type: boolean }
+        riskScore: { type: integer }
+        riskLevel: { type: string }
+        reason: { type: string }
+        timestamp: { type: string, format: date-time }
+      required: [id, user, email, ipAddress, device, success, riskScore, riskLevel, reason, timestamp]
+    SecurityAlert:
+      type: object
+      properties:
+        id: { type: integer }
+        user: { type: string }
+        alertType: { type: string }
+        severity: { type: string }
+        riskScore: { type: integer }
+        message: { type: string }
+        status: { type: string }
+        createdAt: { type: string, format: date-time }
+        resolvedAt: { type: ["string", "null"], format: date-time }
+      required: [id, user, alertType, severity, riskScore, message, status, createdAt, resolvedAt]
+    AuditLog:
+      type: object
+      properties:
+        id: { type: integer }
+        user: { type: string }
+        action: { type: string }
+        resource: { type: string }
+        status: { type: string }
+        ipAddress: { type: string }
+        details: { type: string }
+        timestamp: { type: string, format: date-time }
+      required: [id, user, action, resource, status, ipAddress, details, timestamp]
+    PaginatedUsers:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/User" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+      required: [items, total, page, pageSize]
+    PaginatedSecurityEvents:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/SecurityEvent" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+      required: [items, total, page, pageSize]
+    PaginatedAlerts:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/SecurityAlert" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+      required: [items, total, page, pageSize]
+    PaginatedAuditLogs:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/AuditLog" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+      required: [items, total, page, pageSize]
+    SimulatorInput:
+      type: object
+      properties:
+        eventType: { type: string }
+      required: [eventType]
+    SimulationResult:
+      type: object
+      properties:
+        event: { $ref: "#/components/schemas/SecurityEvent" }
+        alert:
+          anyOf:
+            - $ref: "#/components/schemas/SecurityAlert"
+            - type: "null"
+      required: [event, alert]

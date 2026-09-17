@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Smart IAM Security Platform"
+description = "A production-style identity and access management platform with role-based permissions, MFA, session controls, risk-based login monitoring, alerts, and auditable administration for security teams."
+version = "1.0.0"
+id = "artifacts/smart-iam"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18223
+
+[services.development]
+run = "pnpm --filter @workspace/smart-iam run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/smart-iam", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/smart-iam/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18223"
+BASE_PATH = "/"
