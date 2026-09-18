@@ -9,7 +9,7 @@ function findRootDir(startDir) {
     }
     cur = path.dirname(cur);
   }
-  return path.resolve(__dirname, "..");
+  return path.resolve(__dirname, "../../..");
 }
 
 const rootDir = findRootDir(__dirname);
