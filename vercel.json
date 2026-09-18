@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": "node ./scripts/build-api-bundle.cjs && pnpm --filter @workspace/smart-iam run build",
+  "outputDirectory": "artifacts/smart-iam/dist/public",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
