@@ -1,0 +1,307 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --color-primary: var(--slide-primary);
+  --color-accent: var(--slide-accent);
+  --color-bg: var(--slide-bg);
+  --color-text: var(--slide-text);
+  --color-muted: var(--slide-muted);
+  --font-display: var(--font-display-family);
+  --font-body: var(--font-body-family);
+}
+
+:root {
+  --slide-primary: #e8f2f0;
+  --slide-accent: #55d6bd;
+  --slide-bg: #091117;
+  --slide-text: #e8f2f0;
+  --slide-muted: #92a6ab;
+  --slide-panel: #101d25;
+  --slide-line: #29404a;
+  --slide-amber: #f1b66b;
+  --slide-red: #e07b74;
+  --font-display-family: 'Space Grotesk', sans-serif;
+  --font-body-family: 'IBM Plex Sans', sans-serif;
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--slide-bg);
+  color: var(--slide-text);
+  font-family: var(--font-body-family);
+}
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.slide-viewer {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.deck-root {
+  background: radial-gradient(circle at 82% 12%, rgba(50, 102, 101, 0.16), transparent 34%), linear-gradient(135deg, #091117 0%, #0b151c 55%, #0a1116 100%);
+}
+
+.deck-root::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  background-image: linear-gradient(rgba(143, 190, 190, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(143, 190, 190, 0.05) 1px, transparent 1px);
+  background-size: 5vw 5vw;
+  mask-image: linear-gradient(to bottom, black, transparent 80%);
+}
+
+.deck-shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  padding: 7vh 7vw 6vh;
+  box-sizing: border-box;
+}
+
+.eyebrow {
+  color: var(--slide-accent);
+  font-family: var(--font-display-family);
+  font-size: 1.45vw;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.content-title {
+  margin: 2.4vh 0 0;
+  max-width: 68vw;
+  color: var(--slide-primary);
+  font-family: var(--font-display-family);
+  font-size: 4.1vw;
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.content-title-wide {
+  max-width: 82vw;
+}
+
+.body-copy {
+  color: var(--slide-muted);
+  font-family: var(--font-body-family);
+  font-size: 2vw;
+  line-height: 1.32;
+  text-wrap: pretty;
+}
+
+.bullet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3vw;
+  margin-top: 6vh;
+}
+
+.bullet-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3.2vh;
+}
+
+.bullet-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1vw;
+  color: var(--slide-primary);
+  font-family: var(--font-body-family);
+  font-size: 2vw;
+  line-height: 1.2;
+  text-wrap: pretty;
+}
+
+.bullet-mark {
+  flex: 0 0 auto;
+  width: 0.65vw;
+  height: 0.65vw;
+  margin-top: 0.56vw;
+  border-radius: 999px;
+  background: var(--slide-accent);
+  box-shadow: 0 0 0 0.35vw rgba(85, 214, 189, 0.12);
+}
+
+.panel {
+  border: 1px solid var(--slide-line);
+  background: rgba(16, 29, 37, 0.78);
+  box-shadow: 0 1.5vw 3vw rgba(0, 0, 0, 0.18);
+}
+
+.panel-soft {
+  border: 1px solid rgba(85, 214, 189, 0.22);
+  background: rgba(16, 29, 37, 0.52);
+}
+
+.rail {
+  position: absolute;
+  left: 7vw;
+  top: 0;
+  width: 0.28vw;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--slide-accent), transparent 75%);
+}
+
+.hero-title {
+  max-width: 70vw;
+  color: #f0f7f4;
+  font-family: var(--font-display-family);
+  font-size: 6.8vw;
+  font-weight: 600;
+  letter-spacing: -0.075em;
+  line-height: 0.88;
+  text-wrap: balance;
+}
+
+.hero-subtitle {
+  max-width: 45vw;
+  margin-top: 4vh;
+  color: #c1d0cf;
+  font-family: var(--font-body-family);
+  font-size: 2.25vw;
+  line-height: 1.25;
+  text-wrap: pretty;
+}
+
+.stat-number {
+  color: var(--slide-accent);
+  font-family: var(--font-display-family);
+  font-size: 10vw;
+  font-weight: 600;
+  letter-spacing: -0.09em;
+  line-height: 0.82;
+}
+
+.stat-caption {
+  max-width: 20vw;
+  margin-top: 2.5vh;
+  color: var(--slide-muted);
+  font-family: var(--font-body-family);
+  font-size: 1.8vw;
+  line-height: 1.25;
+}
+
+.rule {
+  width: 8vw;
+  height: 0.32vw;
+  background: var(--slide-accent);
+}
+
+.small-label {
+  color: var(--slide-muted);
+  font-family: var(--font-display-family);
+  font-size: 1.45vw;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.footer-line {
+  position: absolute;
+  left: 7vw;
+  right: 7vw;
+  bottom: 3.5vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(146, 166, 171, 0.72);
+  font-family: var(--font-display-family);
+  font-size: 1.25vw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cover-visual {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+}
+
+.cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(5, 12, 17, 0.95) 0%, rgba(5, 12, 17, 0.76) 44%, rgba(5, 12, 17, 0.36) 100%), linear-gradient(0deg, rgba(5, 12, 17, 0.82) 0%, transparent 52%);
+}
+
+.cover-grid {
+  position: absolute;
+  right: 7vw;
+  top: 13vh;
+  width: 29vw;
+  height: 58vh;
+  border: 1px solid rgba(85, 214, 189, 0.32);
+  background: linear-gradient(145deg, rgba(85, 214, 189, 0.12), rgba(16, 29, 37, 0.2));
+  transform: skewY(-7deg);
+}
+
+.cover-grid::before,
+.cover-grid::after {
+  content: '';
+  position: absolute;
+  background: rgba(85, 214, 189, 0.36);
+}
+
+.cover-grid::before {
+  left: 22%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+
+.cover-grid::after {
+  left: 0;
+  right: 0;
+  top: 58%;
+  height: 1px;
+}
+
+.risk-panel {
+  border: 1px solid rgba(241, 182, 107, 0.36);
+  background: linear-gradient(145deg, rgba(241, 182, 107, 0.12), rgba(16, 29, 37, 0.72));
+}
+
+.architecture-line {
+  position: absolute;
+  top: 51%;
+  left: 9vw;
+  right: 9vw;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(85, 214, 189, 0.5), transparent);
+}
+
+.architecture-node {
+  position: relative;
+  z-index: 1;
+  border-top: 2px solid var(--slide-accent);
+  padding-top: 2.2vh;
+}
+
+.closing-panel {
+  width: 38vw;
+  padding: 3.5vh 3vw;
+  border-left: 0.35vw solid var(--slide-accent);
+  background: rgba(16, 29, 37, 0.78);
+}

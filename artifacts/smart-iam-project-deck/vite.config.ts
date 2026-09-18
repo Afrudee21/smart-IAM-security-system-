@@ -5,6 +5,8 @@ import { defineConfig } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 
+import { sdmVitePlugin } from './src/.sdm/sdmVitePlugin';
+
 const rawPort = process.env.PORT;
 
 if (!rawPort) {
@@ -31,8 +33,9 @@ export default defineConfig({
   base: basePath,
   plugins: [
     react(),
-    tailwindcss(),
     runtimeErrorOverlay(),
+    tailwindcss(),
+    sdmVitePlugin(),
     ...(process.env.NODE_ENV !== 'production' &&
     process.env.REPL_ID !== undefined
       ? [
@@ -57,7 +60,6 @@ export default defineConfig({
         'attached_assets',
       ),
     },
-    dedupe: ['react', 'react-dom'],
   },
   root: path.resolve(import.meta.dirname),
   build: {
@@ -71,13 +73,6 @@ export default defineConfig({
     allowedHosts: true,
     fs: {
       strict: true,
-    },
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        secure: false,
-      },
     },
   },
   preview: {

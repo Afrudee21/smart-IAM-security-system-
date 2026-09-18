@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "HjwmFAt8VlJjSN8JmHalY"
+uri = "file://.local/outputs/Smart-IAM-Project-Deck.pptx"
+type = "slides"
+title = "Smart IAM Project Deck.pptx"

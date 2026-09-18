@@ -1,0 +1,10 @@
+[
+  {"id":"8a3f8c1e-89df-4e40-b37d-1d9c5e1a2a01","position":1,"filepath":"src/pages/slides/Slide1.tsx","title":"Smart IAM Security Platform","description":"Enterprise identity, access, and security monitoring in one runnable application.","speakerNotes":""},
+  {"id":"8a3f8c1e-89df-4e40-b37d-1d9c5e1a2a02","position":2,"filepath":"src/pages/slides/Slide2.tsx","title":"Identity Control","description":"Authentication, session security, and MFA foundations.","speakerNotes":""},
+  {"id":"8a3f8c1e-89df-4e40-b37d-1d9c5e1a2a03","position":3,"filepath":"src/pages/slides/Slide3.tsx","title":"Role-Based Access","description":"Granular roles, permissions, and server-side enforcement.","speakerNotes":""},
+  {"id":"8a3f8c1e-89df-4e40-b37d-1d9c5e1a2a04","position":4,"filepath":"src/pages/slides/Slide4.tsx","title":"Risk Detection","description":"Risk scoring, signals, and safe synthetic event simulation.","speakerNotes":""},
+  {"id":"8a3f8c1e-89df-4e40-b37d-1d9c5e1a2a05","position":5,"filepath":"src/pages/slides/Slide5.tsx","title":"Security Operations","description":"Dashboard visibility, alerts, audit evidence, and export.","speakerNotes":""},
+  {"id":"8a3f8c1e-89df-4e40-b37d-1d9c5e1a2a06","position":6,"filepath":"src/pages/slides/Slide6.tsx","title":"Administration","description":"Identity and policy administration workflows.","speakerNotes":""},
+  {"id":"8a3f8c1e-89df-4e40-b37d-1d9c5e1a2a07","position":7,"filepath":"src/pages/slides/Slide7.tsx","title":"Application Architecture","description":"Frontend, API, persistence, and safe synthetic data boundaries.","speakerNotes":""},
+  {"id":"8a3f8c1e-89df-4e40-b37d-1d9c5e1a2a08","position":8,"filepath":"src/pages/slides/Slide8.tsx","title":"Verification","description":"Validated flows and publication readiness.","speakerNotes":""}
+]

@@ -47,3 +47,15 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Environment variables (contains secrets)
+.env
+.env.local
+.env.*.local
+
+# Local helper scripts
+create-tables.cjs
+create-tables.mjs
+run-db-push.mjs
+drizzle.config.mjs
+schema.mjs
